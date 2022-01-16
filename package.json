@@ -1,0 +1,9 @@
+{
+  "name": "forkify",
+  "version": "1.0.0",
+  "description": "Recipe Application",
+  "main": "index.html",
+  "scripts": {},
+  "author": "Mikita Kavaleuski",
+  "license": "ISC"
+}
