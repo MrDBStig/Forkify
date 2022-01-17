@@ -5,15 +5,14 @@
 // API stuff
 import { API_URL, API_KEY } from './config.js';
 
+// Helper function
+import { getJSON } from './views/helpers.js';
+
 export const state = { recipe: {} };
 
 export const loadRecipe = async function (id) {
   try {
-    const res = await fetch(`${API_URL}/${id}?key=${API_KEY}`);
-    const data = await res.json();
-
-    if (!res.ok) throw new Error(`${data.message} (${res.status})`);
-
+    getJSON(`${API_URL}/${id}?key=${API_KEY}`);
     const { recipe } = data.data;
     state.recipe = {
       id: recipe.id,
