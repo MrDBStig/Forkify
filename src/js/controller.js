@@ -31,6 +31,17 @@ const controlRecipes = async function () {
   }
 };
 
+const controlSearchResults = async function () {
+  try {
+    await model.loadSearchResults('bread');
+  } catch (err) {
+    // console.error(err);
+    recipeView.renderError();
+  }
+};
+
+controlSearchResults();
+
 const init = function () {
   recipeView.addHandlerRender(controlRecipes);
 };
