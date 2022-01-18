@@ -1,9 +1,15 @@
 export default class View {
-  _parentElement = '';
   _data;
-  _errorMessage = `We couldn't find that recipe. Please try another one!`;
-  _message = '';
 
+  /**
+   * Render the received object to the DOM
+   * @param {Object | Object[]} data The data to be rendered (e.g. recipe)
+   * @param {boolean} [render=true] If false, create markup string instead of rendering to the DOM
+   * @returns {undefined | string} A markup string is returned if render=false
+   * @this {Object} View instance
+   * @author Jonas Schmedtmann
+   * @todo Finish implementation
+   */
   render(data, render = true) {
     if (!data || (Array.isArray(data) && data.length === 0))
       return this.renderError();
@@ -17,10 +23,6 @@ export default class View {
     this._parentElement.insertAdjacentHTML('afterbegin', markup);
   }
 
-  _clear() {
-    this._parentElement.innerHTML = '';
-  }
-
   update(data) {
     this._data = data;
     const newMarkup = this._generateMarkup();
@@ -31,19 +33,27 @@ export default class View {
 
     newElements.forEach((newEl, i) => {
       const curEl = curElements[i];
+      // console.log(curEl, newEl.isEqualNode(curEl));
+
+      // Updates changed TEXT
       if (
         !newEl.isEqualNode(curEl) &&
         newEl.firstChild?.nodeValue.trim() !== ''
       ) {
+        // console.log('💥', newEl.firstChild.nodeValue.trim());
         curEl.textContent = newEl.textContent;
       }
 
-      if (!newEl.isEqualNode(curEl)) {
+      // Updates changed ATTRIBUES
+      if (!newEl.isEqualNode(curEl))
         Array.from(newEl.attributes).forEach(attr =>
           curEl.setAttribute(attr.name, attr.value)
         );
-      }
     });
+  }
+
+  _clear() {
+    this._parentElement.innerHTML = '';
   }
 
   renderSpinner() {
@@ -53,21 +63,21 @@ export default class View {
           <use href="src/img/icons.svg#icon-loader"></use>
         </svg>
       </div>
-      `;
+    `;
     this._clear();
     this._parentElement.insertAdjacentHTML('afterbegin', markup);
   }
 
   renderError(message = this._errorMessage) {
     const markup = `
-    <div class="error">
-      <div>
-        <svg>
-          <use href="src/img/icons.svg#icon-alert-triangle"></use>
-        </svg>
+      <div class="error">
+        <div>
+          <svg>
+            <use href="src/img/icons.svg#icon-alert-triangle"></use>
+          </svg>
+        </div>
+        <p>${message}</p>
       </div>
-      <p>${message}</p>
-    </div>
     `;
     this._clear();
     this._parentElement.insertAdjacentHTML('afterbegin', markup);
@@ -75,14 +85,14 @@ export default class View {
 
   renderMessage(message = this._message) {
     const markup = `
-    <div class="message">
-      <div>
-        <svg>
-          <use href="src/img/icons.svg#icon-smile"></use>
-        </svg>
+      <div class="message">
+        <div>
+          <svg>
+            <use href="src/img/icons.svg#icon-smile"></use>
+          </svg>
+        </div>
+        <p>${message}</p>
       </div>
-      <p>${message}</p>
-    </div>
     `;
     this._clear();
     this._parentElement.insertAdjacentHTML('afterbegin', markup);
